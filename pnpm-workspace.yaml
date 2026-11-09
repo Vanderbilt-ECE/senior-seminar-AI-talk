@@ -1,0 +1,5 @@
+virtualStoreDir: .pnpm.nosync
+allowBuilds:
+  playwright-chromium: true
+overrides:
+  markdown-it: ^14.1.1

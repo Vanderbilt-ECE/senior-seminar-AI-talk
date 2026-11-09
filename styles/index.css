@@ -1,0 +1,145 @@
+/* ───────────── Design tokens ─────────────
+   One color per concept, used consistently across every slide. */
+:root {
+  --bg: #0b0d12;
+  --panel: #131722;
+  --panel-2: #1a1f2e;
+  --line: #2a3142;
+  --text: #e6e8ee;
+  --muted: #7a8194;
+  --dim: #4a5163;
+
+  --llm: #f97316;   /* the model            */
+  --ctx: #22d3ee;   /* context / messages   */
+  --json: #facc15;  /* structured output    */
+  --tool: #22c55e;  /* tools / action       */
+  --rag: #3b82f6;   /* retrieval / docs     */
+  --loop: #2dd4bf;  /* agent loop           */
+  --mcp: #a3e635;   /* MCP / interface      */
+  --bad: #ef4444;   /* failure / danger     */
+  --human: #e5e7eb; /* the human            */
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.slidev-layout {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+  padding: 2.4rem 3.2rem 2rem;
+}
+
+.slidev-layout h1 {
+  font-size: 2.3rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 0.4rem;
+}
+.slidev-layout h1 + p { opacity: 1; }
+
+/* Content slides: split the free space evenly above and below the content,
+   so it sits centered under the title instead of packed against it. */
+.slidev-layout.default { display: flex; flex-direction: column; }
+.slidev-layout.default > * { flex-shrink: 0; }
+.slidev-layout.default > h1 { margin-bottom: auto; padding-bottom: 1.2rem; }
+.slidev-layout.default::after { content: ''; margin-top: auto; }
+/* leave room for the pinned takeaway banner */
+.slidev-layout.default:has(> .takeaway) { padding-bottom: 7rem; }
+
+/* small colored label above slide titles */
+.kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--k, var(--muted));
+  margin-bottom: 0.35rem;
+}
+.sub { color: var(--muted); font-size: 1.05rem; }
+
+.c-llm { color: var(--llm); }  .c-ctx { color: var(--ctx); }
+.c-json { color: var(--json); } .c-tool { color: var(--tool); }
+.c-rag { color: var(--rag); }  .c-loop { color: var(--loop); }
+.c-bad { color: var(--bad); }  .c-muted { color: var(--muted); }
+
+.mono { font-family: 'JetBrains Mono', monospace; }
+
+/* ───────────── Click-step primitives (used by SVG components) ─────────────
+   Components add `.on` when their beat is reached. */
+.st {
+  opacity: 0;
+  transition: opacity 0.6s var(--ease), transform 0.7s var(--ease);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.st.on { opacity: 1; }
+.st.up { transform: translateY(14px); }
+.st.up.on { transform: none; }
+.st.pop { transform: scale(0.85); }
+.st.pop.on { transform: none; }
+.st.left { transform: translateX(-24px); }
+.st.left.on { transform: none; }
+.st.off { opacity: 0 !important; }
+.dimmed { opacity: 0.22 !important; transition: opacity 0.6s var(--ease); }
+
+/* flowing dashes along arrows (ambient motion) */
+.flow {
+  stroke-dasharray: 6 8;
+  animation: flow 1.2s linear infinite;
+}
+@keyframes flow { to { stroke-dashoffset: -28; } }
+
+.pulse { animation: pulse 2.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes pulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+
+.blink { animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+svg text { font-family: 'Inter', system-ui, sans-serif; }
+svg .mono, svg text.mono { font-family: 'JetBrains Mono', monospace; }
+
+/* ───────────── Cards ───────────── */
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.2rem;
+}
+.takeaway {
+  position: absolute;
+  left: 3.2rem; right: 3.2rem; bottom: 2rem;
+  border-left: 4px solid var(--k, var(--ctx));
+  background: linear-gradient(90deg, color-mix(in srgb, var(--k) 14%, transparent), transparent 70%);
+  padding: 0.8rem 1.2rem;
+  border-radius: 6px;
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+.takeaway small {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--k);
+  font-weight: 500;
+  margin-bottom: 0.15rem;
+}
+
+/* section divider */
+.section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--k);
+  opacity: 0.9;
+}
+
+/* In PDF export every click state is its own page: kill transitions so
+   pages never get captured mid-animation. */
+html.print .st, .print .st, [data-print] .st { transition: none !important; }
+/* Box-shadow glows rasterize as solid blocks in PDF output. */
+@media print { *, *::before, *::after { box-shadow: none !important; } }
+html.print *, html.print *::before, html.print *::after { box-shadow: none !important; }

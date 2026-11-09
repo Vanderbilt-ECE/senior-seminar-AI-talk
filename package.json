@@ -1,0 +1,19 @@
+{
+  "name": "agentic-ai-talk",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "slidev --open --port 3040",
+    "build": "slidev build",
+    "export": "slidev export --with-clicks"
+  },
+  "dependencies": {
+    "@iconify-json/carbon": "^1.2.29",
+    "@slidev/cli": "^53.0.0",
+    "@slidev/theme-default": "^0.25.0",
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "playwright-chromium": "^1.64.1"
+  }
+}
